@@ -1,0 +1,46 @@
+services:
+  guacd:
+    image: guacamole/guacd:1.4.0
+    restart: always
+    volumes:
+      - ./data/drive:/opt/guacamole/drive
+      - ./data/recording:/opt/guacamole/recording
+    environment:
+      - TZ=Asia/Bangkok
+  guacamole:
+    build:
+      context: ./guacamole
+      args:
+        - GUACAMOLE_HOME=${GUACAMOLE_HOME}
+    restart: always
+    links:
+      - "guacd"
+      - "mysql"
+    environment:
+      - GUACD_HOSTNAME=guacd
+      - GUACAMOLE_HOME=${GUACAMOLE_HOME}
+      - MYSQL_HOSTNAME=mysql
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TOTP_ENABLED=${TOTP_ENABLED}
+      - TZ=Asia/Bangkok
+  mysql:
+    build:
+      context: ./mysql
+    user: "${UID}:${GID}"
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        - MAX_UPLOAD_SIZE=${MAX_UPLOAD_SIZE}
+    restart: always
+    depends_on:
+      - guacamole
+    ports:
+      - "80:80"
