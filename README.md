@@ -7,13 +7,20 @@ This is a demo code for Apache Guacamole installation with Nginx reverse proxy r
 
 ## Initialization
 
+CLone the repository
+
 ```
 git clone https://github.com/suksit/guacamole_demo.git
 ```
 
+Next we have to setup environment variables
+
 * Copy `.env.example` to `.env`
 * Edit `.env` and provide `MYSQL_ROOT_PASSWORD` and `MYSQL_PASSWORD`
 * You can enable TOTP by setting `TOTP_ENABLED` to `true`
+* (Recommended) change `UID` and `GID` to that of the current user so MySQL data files will be created with current user's permission instead of root
+
+Then start the containers and create database tables
 
 ```
 cd /path/to/guacamole_demo
