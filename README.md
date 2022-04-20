@@ -5,6 +5,8 @@
 
 This is a demo code for Apache Guacamole installation with Nginx reverse proxy running on Docker (with some sensible default options)
 
+Tested on Docker Desktop for Windows with WSL 2
+
 ## Initialization
 
 CLone the repository
